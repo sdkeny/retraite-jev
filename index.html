@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retraite JEV 2026 — Questionnaire</title>
+<meta name="description" content="Retraite de Jeunesse Et Vie, les 28 et 29 novembre 2026 à Marseille. Inscris-toi et dis-nous ce que tu attends de ces deux jours.">
+
+<meta property="og:title" content="Retraite JEV — 28 et 29 novembre 2026, Marseille">
+<meta property="og:description" content="Inscris-toi à la retraite de Jeunesse Et Vie et partage tes attentes.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="demo-banner" class="demo-banner" hidden>
+  <strong>Mode démonstration</strong> — Supabase n'est pas encore configuré&nbsp;: les réponses restent dans le navigateur et ne parviennent pas aux organisateurs.
+  <span class="demo-banner__hint">N'envoyez pas encore le lien&nbsp;: ce bandeau disparaîtra dès que les deux clés seront renseignées dans <code>config.js</code> (voir README.md).</span>
+</div>
+
+<!-- ============================ HERO ============================ -->
+<header class="hero hero--seul" id="accueil">
+  <div class="hero__text">
+    <p class="overline" id="hero-orga">Jeunesse Et Vie</p>
+    <h1 class="titre">
+      <span>Retraite</span>
+      <span class="titre__fort">JEV</span>
+    </h1>
+    <p class="hero__date" data-date-texte>Les 28 et 29 novembre 2026</p>
+    <p class="hero__lieu" id="hero-lieu">Marseille</p>
+
+    <div class="countdown" id="countdown" aria-label="Compte à rebours">
+      <div class="countdown__cell"><b data-cd="j">–</b><span>jours</span></div>
+      <div class="countdown__cell"><b data-cd="h">–</b><span>heures</span></div>
+      <div class="countdown__cell"><b data-cd="m">–</b><span>minutes</span></div>
+      <div class="countdown__cell"><b data-cd="s">–</b><span>secondes</span></div>
+    </div>
+
+    <a class="btn btn--primary" href="#inscription">Remplir le questionnaire</a>
+  </div>
+</header>
+
+<!-- ============================ NAV ============================ -->
+<nav class="nav" id="nav">
+  <a href="#accueil">Accueil</a>
+  <a href="#theme">Thème</a>
+  <a href="#programme">Programme</a>
+  <a href="#infos">Infos pratiques</a>
+  <a href="#inscription">Questionnaire</a>
+</nav>
+
+<!-- ============================ THÈME ============================ -->
+<section class="section section--theme" id="theme">
+  <div class="wrap wrap--narrow center">
+    <span class="ornament">✦</span>
+    <p class="section__over">Le thème de la retraite</p>
+    <blockquote class="citation">
+      <p id="theme-citation"></p>
+      <cite id="theme-ref"></cite>
+    </blockquote>
+    <div class="lede" id="theme-texte"></div>
+  </div>
+</section>
+
+<!-- ========================== PROGRAMME ========================== -->
+<section class="section section--programme" id="programme">
+  <div class="wrap">
+    <div class="center">
+      <span class="ornament">✦</span>
+      <h2 class="h2">Le déroulé</h2>
+      <p class="section__sub" data-date-texte>Les 28 et 29 novembre 2026</p>
+    </div>
+    <div class="timeline" id="timeline"></div>
+    <p class="programme__note">Le programme détaillé, avec les horaires précis, sera remis à l'arrivée.</p>
+  </div>
+</section>
+
+<!-- =========================== INFOS =========================== -->
+<section class="section section--infos" id="infos">
+  <div class="wrap">
+    <div class="center">
+      <span class="ornament">✦</span>
+      <h2 class="h2">Infos pratiques</h2>
+    </div>
+
+    <div class="cards">
+      <article class="card">
+        <div class="card__icone" aria-hidden="true">📍</div>
+        <h3 class="card__titre">Le lieu</h3>
+        <p class="card__fort" id="lieu-nom">Marseille</p>
+        <p class="card__texte" id="lieu-adresse"></p>
+        <a class="card__lien" id="lieu-carte" href="#" target="_blank" rel="noopener" hidden>Voir le plan</a>
+      </article>
+
+      <article class="card">
+        <div class="card__icone" aria-hidden="true">💳</div>
+        <h3 class="card__titre">Participation</h3>
+        <p class="card__fort" id="cotisation-montant"></p>
+        <p class="card__texte" id="cotisation-detail"></p>
+        <div class="card__paiement" id="cotisation-paiement"></div>
+        <p class="card__note" id="cotisation-note"></p>
+      </article>
+
+      <article class="card">
+        <div class="card__icone" aria-hidden="true">🎒</div>
+        <h3 class="card__titre">À emporter</h3>
+        <ul class="card__liste">
+          <li>Bible, carnet et stylo</li>
+          <li>Sac de couchage ou draps, si tu dors sur place</li>
+          <li>Nécessaire de toilette et serviette</li>
+          <li>Une tenue chaude : fin novembre, les soirées sont fraîches</li>
+          <li>Une tenue correcte pour le culte du dimanche</li>
+          <li>Tes médicaments habituels, si tu en prends</li>
+        </ul>
+      </article>
+
+      <article class="card" id="card-contact">
+        <div class="card__icone" aria-hidden="true">📞</div>
+        <h3 class="card__titre">Une question&nbsp;?</h3>
+        <p class="card__texte">Les responsables répondent à toutes tes questions&nbsp;:</p>
+        <p class="card__fort"><a id="infoline-lien" href="#"></a></p>
+        <a class="card__lien" id="infoline-wa" href="#" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= QUESTIONNAIRE ========================= -->
+<section class="section section--form" id="inscription">
+  <div class="wrap wrap--form">
+    <div class="center">
+      <span class="ornament">✦</span>
+      <h2 class="h2">Questionnaire de la retraite</h2>
+      <p class="lede lede--tight">
+        Il nous aide à préparer l'accueil et les repas,
+        et à bâtir un programme à l'écoute de ce que tu vis. Compte cinq minutes.
+      </p>
+      <p class="deadline" id="deadline"></p>
+    </div>
+
+    <form class="form" id="camp-form" novalidate>
+
+      <!-- ============ 1. Identité ============ -->
+      <p class="form__etape">1 · Qui es-tu&nbsp;?</p>
+
+      <fieldset class="field">
+        <label class="q" for="nom">Nom et prénom <span class="req">*</span></label>
+        <input class="input" type="text" id="nom" name="nom" autocomplete="name"
+               placeholder="Nom et prénom" required>
+        <p class="err" data-err-for="nom"></p>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend class="q">Tu es&nbsp;: <span class="req">*</span></legend>
+        <div class="choices choices--row">
+          <label class="choice"><input type="radio" name="sexe" value="Frère"><span>Un frère</span></label>
+          <label class="choice"><input type="radio" name="sexe" value="Sœur"><span>Une sœur</span></label>
+        </div>
+        <p class="hint">Cette information ne sert qu'à répartir les chambres.</p>
+        <p class="err" data-err-for="sexe"></p>
+      </fieldset>
+
+      <fieldset class="field">
+        <label class="q" for="telephone">Ton numéro de téléphone, WhatsApp de préférence <span class="req">*</span></label>
+        <input class="input" type="tel" id="telephone" name="telephone" autocomplete="tel"
+               placeholder="06 12 34 56 78" required>
+        <p class="err" data-err-for="telephone"></p>
+      </fieldset>
+
+      <fieldset class="field">
+        <label class="q" for="email">Ton adresse e-mail <span class="opt">(facultatif)</span></label>
+        <input class="input" type="email" id="email" name="email" autocomplete="email"
+               placeholder="nom@exemple.com">
+      </fieldset>
+
+      <fieldset class="field">
+        <label class="q" for="ville">Ta ville de départ <span class="opt">(facultatif)</span></label>
+        <input class="input" type="text" id="ville" name="ville"
+               placeholder="Ex. Marseille, Aix-en-Provence, Toulon…">
+        <p class="hint">Cela nous aide à organiser le covoiturage.</p>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend class="q">Tu viens en tant que&nbsp;: <span class="req">*</span></legend>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="statut" value="Membre de JEV"><span>Membre de JEV</span></label>
+          <label class="choice"><input type="radio" name="statut" value="Invité(e)"><span>Invité(e) : je viens avec un ami ou je découvre JEV</span></label>
+        </div>
+        <p class="err" data-err-for="statut"></p>
+      </fieldset>
+
+      <fieldset class="field" id="field-invite-par" hidden>
+        <label class="q" for="invite_par">Qui t'a invité(e)&nbsp;? <span class="opt">(facultatif)</span></label>
+        <input class="input" type="text" id="invite_par" name="invite_par" placeholder="Le nom de la personne">
+      </fieldset>
+
+      <!-- ============ 2. Présence ============ -->
+      <p class="form__etape">2 · Ta présence</p>
+
+      <fieldset class="field">
+        <legend class="q">Quels jours seras-tu présent(e)&nbsp;? <span class="req">*</span></legend>
+        <div class="choices choices--row">
+          <label class="choice"><input type="checkbox" name="jours" value="Sam. 28"><span>Samedi 28</span></label>
+          <label class="choice"><input type="checkbox" name="jours" value="Dim. 29"><span>Dimanche 29</span></label>
+        </div>
+        <p class="err" data-err-for="jours"></p>
+      </fieldset>
+
+      <fieldset class="field">
+        <label class="q" for="repas">As-tu une allergie ou un régime alimentaire à signaler&nbsp;? <span class="opt">(facultatif)</span></label>
+        <input class="input" type="text" id="repas" name="repas"
+               placeholder="Ex. allergie aux arachides, au gluten, végétarien, sans porc…">
+        <p class="hint">Laisse vide si tu n'as rien à signaler.</p>
+      </fieldset>
+
+
+      <!-- ============ 3. Tes attentes ============ -->
+      <p class="form__etape" id="etape-attentes">3 · Tes attentes</p>
+
+      <fieldset class="field">
+        <legend class="q">Quels sujets aimerais-tu voir abordés&nbsp;? <span class="opt">(plusieurs choix possibles)</span></legend>
+        <div class="choices choices--row">
+          <label class="choice"><input type="checkbox" name="sujets" value="Mon identité en Christ"><span>Mon identité en Christ</span></label>
+          <label class="choice"><input type="checkbox" name="sujets" value="La prière et la vie spirituelle"><span>La prière et la vie spirituelle</span></label>
+          <label class="choice"><input type="checkbox" name="sujets" value="Les relations, les fiançailles, le mariage"><span>Relations, fiançailles, mariage</span></label>
+          <label class="choice"><input type="checkbox" name="sujets" value="Les études, le travail, la vocation"><span>Études, travail, vocation</span></label>
+          <label class="choice"><input type="checkbox" name="sujets" value="Vivre sa foi au quotidien"><span>Vivre sa foi au quotidien</span></label>
+          <label class="choice"><input type="checkbox" name="sujets" value="La gestion de l'argent"><span>La gestion de l'argent</span></label>
+          <label class="choice"><input type="checkbox" name="sujets" value="Les émotions, les blessures, la guérison intérieure"><span>Émotions et guérison intérieure</span></label>
+          <label class="choice"><input type="checkbox" name="sujets" value="Témoigner de sa foi"><span>Témoigner de sa foi</span></label>
+          <label class="choice"><input type="checkbox" name="sujets" value="Les réseaux sociaux et l'usage des écrans"><span>Réseaux sociaux et écrans</span></label>
+        </div>
+      </fieldset>
+
+      <!-- ============ 4. Commissions ============ -->
+      <p class="form__etape" id="etape-contribution">4 · Les commissions</p>
+
+      <div id="bloc-commissions" hidden>
+        <fieldset class="field">
+          <legend class="q">Dans quelle(s) commission(s) aimerais-tu servir&nbsp;? <span class="opt">(plusieurs choix possibles)</span></legend>
+          <p class="hint">Les commissions préparent la retraite dès maintenant et la font vivre sur place. Coche celles qui te parlent : un responsable te recontactera.</p>
+          <div class="choices">
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Accueil &amp; Hébergement"><span><b>Accueil &amp; Hébergement</b><small>Organisation de l'accueil des frères : gestion des arrivées, du nombre de participants, de l'installation et du couchage.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Communication"><span><b>Communication</b><small>Gestion de tous les moyens de communication de la retraite : flyers, teaser, spot, annonces et transmission des informations pratiques.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Prière / Jeûnes"><span><b>Prière / Jeûnes</b><small>Porter la retraite par la prière et le jeûne avant et pendant l'événement.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Point financier"><span><b>Point financier</b><small>Gestion financière de la retraite : réflexion sur le budget, mobilisation des ressources et recherche de fonds.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Logistique"><span><b>Logistique</b><small>Penser et organiser le schéma logistique depuis toutes les villes vers le lieu de la retraite, calcul des différents coûts.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Enfants"><span><b>Enfants</b><small>Ministère auprès des enfants : encadrement et gestion des enfants durant toute la retraite.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Point santé"><span><b>Point santé</b><small>Gestion de la trousse de secours et des soins de première nécessité (de préférence par des frères du domaine de la santé).</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Animation"><span><b>Animation</b><small>Organisation des jeux et activités favorisant la communion fraternelle.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Restauration"><span><b>Restauration</b><small>Élaboration des menus, calcul du budget, courses, préparation des repas et service.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Louange"><span><b>Louange</b><small>Gestion de la chorale et des temps de louange tout au long de la retraite.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Évangélisation"><span><b>Évangélisation</b><small>Mobilisation et accompagnement de l'équipe dans l'évangélisation.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Nettoyage"><span><b>Nettoyage</b><small>Entretien, hygiène tout au long de la retraite et remise en état des lieux, notamment à la fin de la retraite.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Littérature chrétienne"><span><b>Littérature chrétienne</b><small>Transport sur le lieu de la retraite, vente, présentation et conseil de livres chrétiens.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Lieu de la retraite"><span><b>Lieu de la retraite</b><small>Gestion du lieu : accès, organisation pratique et coordination / discipline sur place.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Sonorisation &amp; Projection"><span><b>Sonorisation &amp; Projection</b><small>Gestion de la sonorisation et de la projection : installation, réglages et suivi technique pendant la retraite.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Archives"><span><b>Archives</b><small>Gestion des photos, vidéos et archives de la retraite.</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Statistiques"><span><b>Statistiques</b><small>Décompte et liste des participants par jour, en présentiel et en ligne ; recensement des invités, convertis, restaurations, baptêmes… (en lien avec l'accueil).</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Conseil et baptêmes"><span><b>Conseil et baptêmes</b><small>Organisation du conseil après l'évangélisation et des baptêmes (lieu…).</small></span></label>
+            <label class="choice choice--desc"><input type="checkbox" name="commissions" value="Scribes – Compte rendu"><span><b>Scribes – Compte rendu</b><small>Prise de notes tout au long de la retraite pour retranscrire, partager et conserver tout ce qui a été dit et fait.</small></span></label>
+            <label class="choice"><input type="checkbox" name="commissions" value="Aucune pour cette fois"><span>Je ne peux pas m'engager cette fois</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <fieldset class="field">
+        <label class="q" for="message">Un mot pour les organisateurs&nbsp;? <span class="opt">(facultatif)</span></label>
+        <textarea class="input" id="message" name="message" rows="3"
+                  placeholder="Une question, une suggestion…"></textarea>
+      </fieldset>
+
+      <p class="form-error" id="form-error" hidden></p>
+
+      <button class="btn btn--primary btn--block" type="submit" id="submit-btn">Envoyer mes réponses</button>
+      <p class="form-note">Une seule réponse par personne. En cas d'erreur, renvoie simplement le questionnaire.</p>
+    </form>
+
+    <!-- écran de remerciement -->
+    <div class="thanks" id="thanks" hidden>
+      <span class="ornament">✦</span>
+      <h3 class="h3" id="thanks-title">Merci&nbsp;!</h3>
+      <p id="thanks-text"></p>
+      <a class="btn btn--ghost" id="thanks-wa" href="#" target="_blank" rel="noopener" hidden>Écrire aux responsables sur WhatsApp</a>
+      <button class="btn btn--ghost" type="button" id="again">Remplir pour quelqu'un d'autre</button>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer class="footer">
+  <div class="wrap center">
+    <p class="footer__titre" id="footer-titre">Retraite JEV 2026</p>
+    <p class="footer__date" data-date-texte>Les 28 et 29 novembre 2026</p>
+    <div class="footer__infos" id="footer-infos"></div>
+    <p class="footer__credit" id="footer-orga">Jeunesse Et Vie ✦</p>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

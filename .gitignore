@@ -1,0 +1,9 @@
+# Ne jamais publier le mot de passe du tableau de bord
+supabase-installation.sql
+
+# Fichiers systeme
+Thumbs.db
+.DS_Store
+
+# Fichiers temporaires de Word (~$...)
+~$*

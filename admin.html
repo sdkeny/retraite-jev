@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Réponses — Retraite JEV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  body{ background:var(--fond); }
+  .admin{ width:min(1400px, 100% - 2.5rem); margin:0 auto; padding:2.5rem 0 4rem; }
+  .admin h1{ font-family:var(--serif); font-weight:600; font-size:2.2rem; margin:.6rem 0 .3rem;
+             color:var(--noir); }
+  .admin .sub{ color:var(--gris); font-size:.7rem; letter-spacing:.2em;
+               text-transform:uppercase; margin:0 0 2.2rem; }
+
+  .panel{ background:var(--blanc); border:1px solid var(--line); border-radius:var(--r-lg);
+          padding:1.6rem; margin-bottom:1.6rem; }
+  .panel h2{ font-family:var(--serif); font-weight:600; font-size:1.3rem; margin:0 0 .4rem;
+             color:var(--noir); }
+  .panel p.help{ color:var(--gris); font-size:.88rem; margin:0 0 1.2rem; }
+  .panel code{ color:var(--principal); font-family:ui-monospace,"Cascadia Mono",monospace;
+               font-size:.92em; }
+  .row{ display:grid; grid-template-columns:1fr auto; gap:.7rem; align-items:start; }
+  @media (max-width:640px){ .row{ grid-template-columns:1fr; } }
+  .row label{ font-size:.66rem; letter-spacing:.18em; text-transform:uppercase;
+              color:var(--gris); display:block; margin-bottom:.35rem; }
+  .row > .btn{ margin-top:1.55rem; }
+  @media (max-width:640px){ .row > .btn{ margin-top:.2rem; } }
+
+  .key-wrap{ position:relative; }
+  .key-wrap .input{ padding-right:6rem; }
+  .key-eye{ position:absolute; right:.5rem; top:50%; transform:translateY(-50%);
+            background:none; border:0; cursor:pointer; padding:.3rem .5rem;
+            font-family:var(--sans); font-size:.6rem; letter-spacing:.14em;
+            text-transform:uppercase; color:var(--principal); }
+  .key-eye:hover{ text-decoration:underline; }
+
+  .stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.9rem;
+          margin-bottom:1.6rem; }
+  .stat{ background:var(--blanc); border:1px solid var(--line); border-radius:var(--r-lg);
+         padding:1.2rem 1.1rem; }
+  .stat b{ display:block; font-family:var(--serif); font-size:2.1rem; font-weight:600;
+           line-height:1; font-variant-numeric:tabular-nums; color:var(--noir); }
+  .stat span{ display:block; margin-top:.5rem; font-size:.6rem; letter-spacing:.16em;
+              text-transform:uppercase; color:var(--gris); }
+  .stat.or{ border-color:var(--line-accent); background:var(--fond-accent); }
+  .stat.or b{ color:var(--principal); }
+
+  .tools{ display:flex; gap:.7rem; flex-wrap:wrap; align-items:center; margin-bottom:1.1rem; }
+  .tools .input{ width:auto; flex:1 1 220px; padding:.6rem .85rem; font-size:.92rem; }
+  .btn--sm{ padding:.62rem 1.3rem; font-size:.62rem; }
+
+  .table-wrap{ overflow-x:auto; border:1px solid var(--line); border-radius:var(--r-lg);
+               background:var(--blanc); }
+  table{ border-collapse:collapse; width:100%; font-size:.88rem; white-space:nowrap; }
+  th,td{ padding:.7rem .85rem; text-align:left; border-bottom:1px solid var(--line);
+         color:var(--noir-doux); vertical-align:top; }
+  th{ font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:var(--principal);
+      font-weight:500; background:var(--fond); position:sticky; top:0; }
+  tbody tr:hover{ background:var(--fond); }
+  td.nom{ font-weight:400; white-space:normal; min-width:10rem; color:var(--noir); }
+  td.long{ white-space:normal; min-width:13rem; max-width:22rem; color:var(--gris); }
+  td.msg{ white-space:normal; min-width:14rem; max-width:24rem; color:var(--gris);
+          font-style:italic; }
+  .tag{ display:inline-block; padding:.14rem .6rem; border-radius:99px; font-size:.72rem;
+        border:1px solid var(--line); }
+  .tag.oui{ color:#2E6B4F; border-color:#BFD9CB; background:#F1F8F4; }
+  .tag.peut{ color:#55636D; border-color:#D5DDE3; background:#EEF1F4; }
+  .tag.non{ color:var(--err); border-color:#E8C4C1; background:#FDF3F2; }
+  .empty{ padding:3rem 1rem; text-align:center; color:var(--gris); }
+
+  .del{ background:none; border:1px solid transparent; border-radius:var(--r);
+        cursor:pointer; padding:.25rem .6rem; font-family:var(--sans);
+        font-size:.6rem; letter-spacing:.14em; text-transform:uppercase;
+        color:var(--gris); transition:color .15s, border-color .15s, background .15s; }
+  tbody tr:hover .del{ color:var(--err); border-color:#E8C4C1; }
+  .del:hover{ background:#FDF3F2; color:var(--err); border-color:var(--err); }
+  .del[disabled]{ opacity:.5; cursor:progress; }
+
+  .msg-box{ padding:.9rem 1.1rem; border-radius:var(--r); font-size:.9rem; margin-bottom:1.2rem;
+            line-height:1.6; }
+  .msg-box code{ font-family:ui-monospace,"Cascadia Mono",monospace; }
+  .msg-box b{ font-weight:500; }
+  .msg-box a{ color:inherit; }
+  .msg-box.err{ background:#FDF3F2; border:1px solid #E8C4C1; color:var(--err); }
+  .msg-box.ok{ background:#EEF5F0; border:1px solid #C9DFD1; color:#2E6B4F; }
+  .msg-box.ok code{ color:var(--principal); }
+
+  .back{ font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--principal);
+         text-decoration:none; }
+  .back:hover{ text-decoration:underline; }
+
+  .commissions{ margin-bottom:1.6rem; }
+  .commissions ul{ list-style:none; margin:0; padding:0; display:grid;
+                   grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:.4rem 1.4rem; }
+  .commissions li{ display:flex; justify-content:space-between; gap:1rem; padding:.35rem 0;
+                   border-bottom:1px solid var(--line); font-size:.9rem; }
+  .commissions li b{ font-variant-numeric:tabular-nums; color:var(--principal); font-weight:500; }
+</style>
+</head>
+<body>
+<div class="admin">
+
+  <a class="back" href="index.html">← Retour au site</a>
+  <h1>Réponses au questionnaire</h1>
+  <p class="sub">Page privée — ne partagez pas ce lien</p>
+
+  <div class="panel" id="connexion">
+    <h2>Accès aux réponses</h2>
+    <p class="help">
+      Saisissez le mot de passe défini dans <code>supabase-installation.sql</code>.
+      Il reste dans ce navigateur et n'est écrit nulle part dans le code du site.
+      Sans lui, la liste est illisible — y compris pour les visiteurs du site.
+    </p>
+    <div class="row">
+      <div>
+        <label for="mdp">Mot de passe</label>
+        <div class="key-wrap">
+          <input class="input" id="mdp" type="password" autocomplete="off" spellcheck="false"
+                 placeholder="Votre mot de passe">
+          <button class="key-eye" id="voir" type="button">Afficher</button>
+        </div>
+      </div>
+      <button class="btn btn--primary btn--sm" id="connect" type="button">Charger</button>
+    </div>
+  </div>
+
+  <div id="message"></div>
+
+  <div class="stats" id="stats" hidden></div>
+
+  <div class="panel commissions" id="commissions" hidden>
+    <h2>Volontaires par commission</h2>
+    <p class="help">Membres de JEV ayant coché chaque commission.</p>
+    <ul id="commissions-liste"></ul>
+  </div>
+
+  <div class="tools" id="tools" hidden>
+    <input class="input" id="search" type="search" placeholder="Rechercher un nom, une ville, une commission…">
+    <button class="btn btn--ghost btn--sm" id="refresh" type="button">Actualiser</button>
+    <button class="btn btn--ghost btn--sm" id="csv" type="button">Exporter en Excel (CSV)</button>
+    <button class="btn btn--ghost btn--sm" id="logout" type="button">Oublier le mot de passe</button>
+  </div>
+
+  <div class="table-wrap" id="table-wrap" hidden>
+    <table>
+      <thead>
+        <tr>
+          <th>Reçu le</th><th>Nom</th><th>F/S</th><th>Téléphone</th>
+          <th>Ville</th><th>Statut</th><th>Jours</th>
+          <th>Allergies / régime</th><th>Sujets</th><th>Commissions</th><th>Message</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (s) { return document.querySelector(s); };
+  var C = window.CAMP || {};
+  var STORE = "jev_admin_mdp";
+  var NB_COLS = 12;
+  var donnees = [];
+  var elMdp = $("#mdp");
+
+  /* --- pré-remplissage depuis la dernière session --- */
+  try { elMdp.value = localStorage.getItem(STORE) || ""; } catch (e) {}
+
+  if (!C.supabaseUrl || !C.supabaseAnonKey) {
+    chargerDemo();
+  } else if (elMdp.value) {
+    charger();
+  } else {
+    info("Base connectée. Saisissez votre mot de passe puis cliquez sur <b>Charger</b>.");
+  }
+
+  $("#connect").addEventListener("click", charger);
+  $("#refresh").addEventListener("click", charger);
+  elMdp.addEventListener("keydown", function (e) { if (e.key === "Enter") charger(); });
+
+  $("#voir").addEventListener("click", function () {
+    var masque = elMdp.type === "password";
+    elMdp.type = masque ? "text" : "password";
+    this.textContent = masque ? "Masquer" : "Afficher";
+  });
+
+  $("#logout").addEventListener("click", function () {
+    try { localStorage.removeItem(STORE); } catch (e) {}
+    elMdp.value = "";
+    location.reload();
+  });
+
+  $("#search").addEventListener("input", function () { rendre(donnees); });
+  $("#csv").addEventListener("click", exporterCsv);
+
+  function info(texte, type) {
+    $("#message").innerHTML = texte
+      ? '<div class="msg-box ' + (type || "ok") + '">' + texte + "</div>"
+      : "";
+  }
+
+  function cacher() {
+    $("#stats").hidden = true;
+    $("#commissions").hidden = true;
+    $("#tools").hidden = true;
+    $("#table-wrap").hidden = true;
+  }
+
+  function urlSql() {
+    var m = String(C.supabaseUrl || "").match(/https:\/\/([a-z0-9]+)\.supabase\.co/i);
+    return m ? "https://supabase.com/dashboard/project/" + m[1] + "/sql/new"
+             : "https://supabase.com/dashboard";
+  }
+
+  /* ---------------- mode démonstration ---------------- */
+  function chargerDemo() {
+    var liste = [];
+    try { liste = JSON.parse(localStorage.getItem("jev_demo") || "[]"); } catch (e) {}
+    donnees = liste;
+    info("Supabase n'est pas configuré dans <code>config.js</code> : affichage des " +
+         liste.length + " réponse(s) gardée(s) dans ce navigateur.", "err");
+    rendre(donnees);
+  }
+
+  /* ---------------- lecture réelle ---------------- */
+  function charger() {
+    var mdp = elMdp.value.trim();
+    if (!mdp) { info("Saisissez votre mot de passe.", "err"); return; }
+
+    var base = String(C.supabaseUrl).replace(/\/+$/, "");
+    info("Chargement…");
+
+    fetch(base + "/rest/v1/rpc/lire_inscriptions_jev", {
+      method: "POST",
+      headers: {
+        apikey: C.supabaseAnonKey,
+        Authorization: "Bearer " + C.supabaseAnonKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ mdp: mdp })
+    })
+      .then(function (r) {
+        return r.text().then(function (txt) {
+          var corps = null;
+          try { corps = JSON.parse(txt); } catch (e) {}
+          if (r.ok) return corps || [];
+          throw { statut: r.status, corps: corps, brut: txt };
+        });
+      })
+      .then(function (rows) {
+        try { localStorage.setItem(STORE, mdp); } catch (e) {}
+        donnees = rows;
+        if (rows.length) info(rows.length + " réponse(s) chargée(s).");
+        else info("Mot de passe accepté, mais <b>aucune réponse</b> pour l'instant.");
+        rendre(rows);
+      })
+      .catch(expliquer);
+  }
+
+  function expliquer(e) {
+    cacher();
+    var m = (e && e.corps && (e.corps.message || e.corps.hint)) || "";
+
+    if (/mot de passe incorrect/i.test(m)) {
+      info("<b>Mot de passe incorrect.</b> C'est celui inscrit sur les lignes " +
+           "<code>attendu</code> de <code>supabase-installation.sql</code>. " +
+           "Si vous l'avez oublié, modifiez ces lignes et relancez le script dans Supabase.", "err");
+      return;
+    }
+    if (e && (e.statut === 404 || /lire_inscriptions_jev|function|schema cache/i.test(m))) {
+      info("<b>La fonction de lecture n'existe pas encore.</b> Ouvrez " +
+           '<a href="' + urlSql() + '" target="_blank" rel="noopener">le SQL Editor de Supabase</a>, ' +
+           "collez tout le contenu de <code>supabase-installation.sql</code> et cliquez sur <b>Run</b>.", "err");
+      return;
+    }
+    info("<b>Lecture impossible.</b> " + (m || (e && e.brut) || e), "err");
+  }
+
+  /* ---------------- affichage ---------------- */
+  function estOui(v)  { return typeof v === "string" && v.indexOf("Oui") === 0; }
+  function estPeut(v) { return typeof v === "string" && v.indexOf("Peut-être") === 0; }
+
+  function rendre(rows) {
+    var q = $("#search").value.trim().toLowerCase();
+    var vue = q
+      ? rows.filter(function (r) {
+          return [r.nom, r.ville, r.commissions].some(function (v) {
+            return String(v || "").toLowerCase().indexOf(q) > -1;
+          });
+        })
+      : rows;
+
+    var samedi = rows.filter(function (r) { return /Sam/.test(r.jours || ""); });
+    var dimanche = rows.filter(function (r) { return /Dim/.test(r.jours || ""); });
+    var allergies = rows.filter(function (r) { return r.repas; });
+    var freres= rows.filter(function (r) { return r.sexe === "Frère"; });
+    var soeurs= rows.filter(function (r) { return r.sexe === "Sœur"; });
+    var membres = rows.filter(function (r) { return r.statut === "Membre de JEV"; });
+    var invites = rows.filter(function (r) { return r.statut && r.statut !== "Membre de JEV"; });
+
+    $("#stats").hidden = false;
+    $("#stats").innerHTML =
+      tuile(rows.length, "réponses reçues") +
+      tuile(samedi.length, "présents samedi", true) +
+      tuile(dimanche.length, "présents dimanche", true) +
+      tuile(freres.length + " / " + soeurs.length, "frères / sœurs") +
+      tuile(membres.length + " / " + invites.length, "membres / invités") +
+      tuile(allergies.length, "allergies / régimes");
+
+    var compte = {};
+    rows.forEach(function (r) {
+      String(r.commissions || "").split(", ").forEach(function (c) {
+        if (c && c !== "Aucune pour cette fois") compte[c] = (compte[c] || 0) + 1;
+      });
+    });
+    var noms = Object.keys(compte).sort(function (a, b) { return compte[b] - compte[a] || a.localeCompare(b); });
+    $("#commissions").hidden = !noms.length;
+    $("#commissions-liste").innerHTML = noms.map(function (c) {
+      return "<li><span>" + esc(c) + "</span><b>" + compte[c] + "</b></li>";
+    }).join("");
+
+    $("#tools").hidden = false;
+    $("#table-wrap").hidden = false;
+
+    if (!vue.length) {
+      $("#tbody").innerHTML = '<tr><td class="empty" colspan="' + NB_COLS + '">' +
+        (rows.length ? "Aucune réponse ne correspond à cette recherche."
+                     : "Aucune réponse pour le moment.") +
+        "</td></tr>";
+      return;
+    }
+
+    $("#tbody").innerHTML = vue.map(function (r) {
+      return "<tr>" +
+        "<td>" + dateFr(r.created_at) + "</td>" +
+        '<td class="nom">' + esc(r.nom) + "</td>" +
+        "<td>" + (r.sexe === "Frère" ? "F" : r.sexe === "Sœur" ? "S" : "—") + "</td>" +
+        "<td>" + tel(r.telephone) + "</td>" +
+        "<td>" + esc(r.ville) + "</td>" +
+        "<td>" + esc(r.statut) + (r.invite_par ? "<br><small>par " + esc(r.invite_par) + "</small>" : "") + "</td>" +
+        "<td>" + esc(r.jours) + "</td>" +
+        '<td class="long">' + esc(r.repas) + "</td>" +
+        '<td class="long">' + esc(r.sujets) + "</td>" +
+        '<td class="long">' + esc(r.commissions) + "</td>" +
+        '<td class="msg">' + esc(r.message) + "</td>" +
+        '<td><button type="button" class="del" data-id="' + esc(r.id) +
+          '" data-nom="' + esc(r.nom) + '">Supprimer</button></td>' +
+        "</tr>";
+    }).join("");
+  }
+
+  /* --------------- suppression d'une inscription --------------- */
+  $("#tbody").addEventListener("click", function (e) {
+    var b = e.target.closest(".del");
+    if (!b) return;
+
+    var nom = b.getAttribute("data-nom");
+    var id  = b.getAttribute("data-id");
+    if (!window.confirm("Supprimer définitivement la réponse de « " + nom + " » ?\n\n" +
+                        "Cette action est irréversible.")) return;
+
+    b.disabled = true;
+    b.textContent = "…";
+
+    var base = String(C.supabaseUrl).replace(/\/+$/, "");
+    fetch(base + "/rest/v1/rpc/supprimer_inscription_jev", {
+      method: "POST",
+      headers: {
+        apikey: C.supabaseAnonKey,
+        Authorization: "Bearer " + C.supabaseAnonKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ mdp: elMdp.value.trim(), ligne_id: id })
+    })
+      .then(function (r) {
+        return r.text().then(function (txt) {
+          var corps = null;
+          try { corps = JSON.parse(txt); } catch (err) {}
+          if (r.ok) return corps;
+          throw { statut: r.status, corps: corps, brut: txt };
+        });
+      })
+      .then(function (n) {
+        if (n === 0) info("Cette réponse avait déjà été supprimée.", "err");
+        else info("Réponse de « " + nom + " » supprimée.");
+        charger();
+      })
+      .catch(function (err) {
+        b.disabled = false;
+        b.textContent = "Supprimer";
+        var m = (err && err.corps && err.corps.message) || "";
+        if (err && (err.statut === 404 || /supprimer_inscription_jev|schema cache/i.test(m))) {
+          info("<b>La fonction de suppression n'existe pas encore.</b> Relancez tout le contenu " +
+               'de <code>supabase-installation.sql</code> dans <a href="' + urlSql() + '" target="_blank" ' +
+               'rel="noopener">le SQL Editor de Supabase</a>.', "err");
+        } else {
+          info("<b>Suppression impossible.</b> " + (m || err.brut || err), "err");
+        }
+      });
+  });
+
+  function tuile(n, libelle, or) {
+    return '<div class="stat' + (or ? " or" : "") + '"><b>' + n + "</b><span>" + libelle + "</span></div>";
+  }
+  function tagPresence(v) {
+    if (!v) return "<td>—</td>";
+    var c = estOui(v) ? "oui" : estPeut(v) ? "peut" : "non";
+    var t = estOui(v) ? "Oui" : estPeut(v) ? "Peut-être" : "Non";
+    return '<td><span class="tag ' + c + '">' + t + "</span></td>";
+  }
+  function tagOuiNon(v) {
+    if (!v) return "<td>—</td>";
+    return '<td><span class="tag ' + (estOui(v) ? "oui" : "non") + '">' +
+           (estOui(v) ? "Oui" : "Non") + "</span></td>";
+  }
+  function tel(v) {
+    if (!v) return "—";
+    return '<a href="tel:' + esc(String(v).replace(/\s+/g, "")) + '">' + esc(v) + "</a>";
+  }
+  function dateFr(iso) {
+    if (!iso) return "—";
+    var d = new Date(iso);
+    if (isNaN(d)) return esc(iso);
+    return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "2-digit" }) +
+           " " + d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  }
+  function esc(v) {
+    if (v === null || v === undefined || v === "") return "—";
+    return String(v).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function exporterCsv() {
+    var cols = ["created_at", "nom", "sexe", "telephone", "email", "ville",
+                "statut", "invite_par",
+                "jours", "repas",
+                "sujets", "commissions", "message"];
+    var entetes = ["Reçu le", "Nom", "Frère/Sœur", "Téléphone", "E-mail", "Ville",
+                   "Statut", "Invité(e) par",
+                   "Jours", "Allergies / régime alimentaire",
+                   "Sujets souhaités", "Commissions", "Message"];
+    var cell = function (v) {
+      return '"' + String(v === null || v === undefined ? "" : v).replace(/"/g, '""') + '"';
+    };
+    var lignes = [entetes.map(cell).join(";")].concat(
+      donnees.map(function (r) { return cols.map(function (c) { return cell(r[c]); }).join(";"); })
+    );
+    var BOM = "\uFEFF"; // pour qu'Excel ouvre le fichier avec les bons accents
+    var contenu = BOM + lignes.join("\r\n");
+    var nom = "reponses-retraite-jev-" + new Date().toISOString().slice(0, 10) + ".csv";
+
+    var blob = new Blob([contenu], { type: "text/csv;charset=utf-8;" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = nom;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  }
+})();
+</script>
+</body>
+</html>
