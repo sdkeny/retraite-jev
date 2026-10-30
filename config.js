@@ -41,7 +41,7 @@ window.CAMP = {
 
   /* ---------- La participation financière ---------- */
   cotisation: {
-    montant: "À confirmer",               /* À CONFIRMER : ex. "30 €" */
+    montant: "",                          /* vide = pas de ligne « Participation » en bas de page */
     detail:  "Repas et activités de la retraite compris.",
     /* Moyens de paiement. Laissez "" pour masquer une ligne.           */
     virement:  "",                        /* ex. "FR76 …" */
