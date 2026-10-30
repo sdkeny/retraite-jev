@@ -20,6 +20,7 @@ create table if not exists public.inscriptions_jev (
   statut         text,
   invite_par     text,
   premiere_fois  text,
+  enfants        text,
 
   -- présence
   participation  text,
@@ -65,3 +66,6 @@ create policy "les jeunes peuvent repondre"
 
 create index if not exists inscriptions_jev_created_at_idx
   on public.inscriptions_jev (created_at desc);
+
+-- Ajout du 2026-10-30 : les enfants inscrits avec le parent
+alter table public.inscriptions_jev add column if not exists enfants text;

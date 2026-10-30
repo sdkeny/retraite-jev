@@ -198,6 +198,19 @@
         <input class="input" type="text" id="invite_par" name="invite_par" placeholder="Le nom de la personne">
       </fieldset>
 
+      <fieldset class="field">
+        <legend class="q">Tes enfants <span class="opt">(facultatif)</span></legend>
+        <div class="choices">
+          <label class="choice"><input type="checkbox" name="avec_enfants" value="Oui"><span>Je viens avec mon ou mes enfants</span></label>
+        </div>
+        <div id="bloc-enfants" hidden>
+          <div class="enfants" id="enfants-liste"></div>
+          <button type="button" class="btn btn--ghost enfant-ajout" id="enfant-ajout">+ Ajouter un enfant</button>
+          <p class="hint">Tes enfants sont inscrits avec toi : pas besoin de remplir un autre questionnaire pour eux.</p>
+        </div>
+        <p class="err" data-err-for="enfant_nom"></p>
+      </fieldset>
+
       <!-- ============ 2. Présence ============ -->
       <p class="form__etape">2 · Ta présence</p>
 

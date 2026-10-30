@@ -151,7 +151,7 @@
       <thead>
         <tr>
           <th>Reçu le</th><th>Nom</th><th>F/S</th><th>Téléphone</th>
-          <th>Ville</th><th>Statut</th><th>Jours</th>
+          <th>Ville</th><th>Statut</th><th>Enfants</th><th>Jours</th>
           <th>Allergies / régime</th><th>Sujets</th><th>Commissions</th><th>Message</th><th></th>
         </tr>
       </thead>
@@ -168,7 +168,7 @@
   var $ = function (s) { return document.querySelector(s); };
   var C = window.CAMP || {};
   var STORE = "jev_admin_mdp";
-  var NB_COLS = 12;
+  var NB_COLS = 13;
   var donnees = [];
   var elMdp = $("#mdp");
 
@@ -293,7 +293,7 @@
     var q = $("#search").value.trim().toLowerCase();
     var vue = q
       ? rows.filter(function (r) {
-          return [r.nom, r.ville, r.commissions].some(function (v) {
+          return [r.nom, r.ville, r.commissions, r.enfants].some(function (v) {
             return String(v || "").toLowerCase().indexOf(q) > -1;
           });
         })
@@ -302,6 +302,9 @@
     var samedi = rows.filter(function (r) { return /Sam/.test(r.jours || ""); });
     var dimanche = rows.filter(function (r) { return /Dim/.test(r.jours || ""); });
     var allergies = rows.filter(function (r) { return r.repas; });
+    var nbEnfants = rows.reduce(function (n, r) {
+      return n + (r.enfants ? String(r.enfants).split(" ; ").length : 0);
+    }, 0);
     var freres= rows.filter(function (r) { return r.sexe === "Frère"; });
     var soeurs= rows.filter(function (r) { return r.sexe === "Sœur"; });
     var membres = rows.filter(function (r) { return r.statut === "Membre de JEV"; });
@@ -314,6 +317,7 @@
       tuile(dimanche.length, "présents dimanche", true) +
       tuile(freres.length + " / " + soeurs.length, "frères / sœurs") +
       tuile(membres.length + " / " + invites.length, "membres / invités") +
+      tuile(nbEnfants, "enfants inscrits") +
       tuile(allergies.length, "allergies / régimes");
 
     var compte = {};
@@ -347,6 +351,7 @@
         "<td>" + tel(r.telephone) + "</td>" +
         "<td>" + esc(r.ville) + "</td>" +
         "<td>" + esc(r.statut) + (r.invite_par ? "<br><small>par " + esc(r.invite_par) + "</small>" : "") + "</td>" +
+        '<td class="long">' + esc(r.enfants) + "</td>" +
         "<td>" + esc(r.jours) + "</td>" +
         '<td class="long">' + esc(r.repas) + "</td>" +
         '<td class="long">' + esc(r.sujets) + "</td>" +
@@ -442,11 +447,11 @@
 
   function exporterCsv() {
     var cols = ["created_at", "nom", "sexe", "telephone", "email", "ville",
-                "statut", "invite_par",
+                "statut", "invite_par", "enfants",
                 "jours", "repas",
                 "sujets", "commissions", "message"];
     var entetes = ["Reçu le", "Nom", "Frère/Sœur", "Téléphone", "E-mail", "Ville",
-                   "Statut", "Invité(e) par",
+                   "Statut", "Invité(e) par", "Enfants",
                    "Jours", "Allergies / régime alimentaire",
                    "Sujets souhaités", "Commissions", "Message"];
     var cell = function (v) {

@@ -226,6 +226,18 @@
     form.addEventListener("change", function (e) { nettoyer(e.target); rafraichir(form); });
     rafraichir(form);
 
+    /* enfants : ajouter / retirer une ligne */
+    $("#enfant-ajout").addEventListener("click", function () {
+      var ligne = ajouterEnfant();
+      ligne.querySelector("input").focus();
+    });
+    $("#enfants-liste").addEventListener("click", function (e) {
+      var b = e.target.closest(".enfant-suppr");
+      if (!b) return;
+      b.closest(".enfant").remove();
+      if (!$$(".enfant", form).length) ajouterEnfant();
+    });
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       erreur.hidden = true;
@@ -252,6 +264,7 @@
         ville:        form.ville.value.trim() || null,
         statut:       valeur(form, "statut"),
         invite_par:   estMembre(form) ? null : (form.invite_par.value.trim() || null),
+        enfants:      enfants(form),
         jours:        valeurs(form, "jours").join(", "),
         repas:        form.repas.value.trim() || null,
         sujets:       valeurs(form, "sujets").join(", ") || null,
@@ -261,6 +274,8 @@
 
       btn.disabled = true;
       btn.textContent = "Envoi en cours…";
+
+      if (!reponse.enfants) delete reponse.enfants;
 
       envoyer(reponse)
         .then(function () { remercier(reponse); })
@@ -281,6 +296,7 @@
     /* « Inscrire quelqu'un d'autre » */
     $("#again").addEventListener("click", function () {
       form.reset();
+      $("#enfants-liste").innerHTML = "";
       $$(".field", form).forEach(function (f) { f.classList.remove("is-invalid"); });
       $$(".err", form).forEach(function (p) { p.textContent = ""; });
       rafraichir(form);
@@ -298,13 +314,42 @@
     var com = $("#bloc-commissions");
     if (com) com.hidden = !membre;
 
+    var avecEnfants = !!valeur(form, "avec_enfants");
+    $("#bloc-enfants").hidden = !avecEnfants;
+    if (avecEnfants && !$$(".enfant", form).length) ajouterEnfant();
+
     var ec = $("#etape-contribution");
     if (ec) ec.textContent = membre ? "4 · Les commissions" : "4 · Un dernier mot";
+  }
+
+  /* Une ligne « prénom et nom + âge » pour un enfant */
+  function ajouterEnfant() {
+    var ligne = document.createElement("div");
+    ligne.className = "enfant";
+    ligne.innerHTML =
+      '<input class="input" type="text" name="enfant_nom" placeholder="Prénom et nom de l'enfant" maxlength="80">' +
+      '<input class="input input--court" type="number" name="enfant_age" min="0" max="17" placeholder="Âge">' +
+      '<button type="button" class="enfant-suppr" aria-label="Retirer cet enfant">×</button>';
+    $("#enfants-liste").appendChild(ligne);
+    return ligne;
+  }
+
+  /* « Léa Dupont (6 ans) ; Noé Dupont (3 ans) », ou null */
+  function enfants(form) {
+    if (!valeur(form, "avec_enfants")) return null;
+    var liste = $$(".enfant", form).map(function (l) {
+      var nom = l.querySelector('[name="enfant_nom"]').value.trim();
+      var age = l.querySelector('[name="enfant_age"]').value.trim();
+      if (!nom) return "";
+      return age ? nom + " (" + age + " ans)" : nom;
+    }).filter(Boolean);
+    return liste.length ? liste.join(" ; ") : null;
   }
 
   function valider(form) {
     var manquants = [];
     var aVerifier = TOUJOURS.slice();
+    if (valeur(form, "avec_enfants")) aVerifier.push("enfant_nom");
 
     aVerifier.forEach(function (nom) {
       var ok, message;
@@ -324,6 +369,11 @@
           message = chiffres.length
             ? "Ce numéro semble incomplet."
             : "Merci d'indiquer un numéro de téléphone.";
+          break;
+
+        case "enfant_nom":
+          ok = !!enfants(form);
+          message = "Merci d'indiquer le nom d'au moins un enfant.";
           break;
 
         case "jours":
