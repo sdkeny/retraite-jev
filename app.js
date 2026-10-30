@@ -209,7 +209,7 @@
      --------------------------------------------------------------- */
 
   /* Questions obligatoires */
-  var TOUJOURS = ["nom", "sexe", "telephone", "statut", "jours"];
+  var TOUJOURS = ["nom", "sexe", "telephone", "statut", "avec_enfants", "jours"];
 
   function estMembre(form) {
     return valeur(form, "statut") === "Membre de JEV";
@@ -225,18 +225,6 @@
     form.addEventListener("input",  function (e) { nettoyer(e.target); rafraichir(form); });
     form.addEventListener("change", function (e) { nettoyer(e.target); rafraichir(form); });
     rafraichir(form);
-
-    /* enfants : ajouter / retirer une ligne */
-    $("#enfant-ajout").addEventListener("click", function () {
-      var ligne = ajouterEnfant();
-      ligne.querySelector("input").focus();
-    });
-    $("#enfants-liste").addEventListener("click", function (e) {
-      var b = e.target.closest(".enfant-suppr");
-      if (!b) return;
-      b.closest(".enfant").remove();
-      if (!$$(".enfant", form).length) ajouterEnfant();
-    });
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -314,42 +302,50 @@
     var com = $("#bloc-commissions");
     if (com) com.hidden = !membre;
 
-    var avecEnfants = !!valeur(form, "avec_enfants");
+    var avecEnfants = valeur(form, "avec_enfants") === "Oui";
     $("#bloc-enfants").hidden = !avecEnfants;
-    if (avecEnfants && !$$(".enfant", form).length) ajouterEnfant();
+    lignesEnfants(avecEnfants ? nbEnfants(form) : 0);
 
     var ec = $("#etape-contribution");
     if (ec) ec.textContent = membre ? "4 · Les commissions" : "4 · Un dernier mot";
   }
 
-  /* Une ligne « prénom et nom + âge » pour un enfant */
-  function ajouterEnfant() {
-    var ligne = document.createElement("div");
-    ligne.className = "enfant";
-    ligne.innerHTML =
-      '<input class="input" type="text" name="enfant_nom" placeholder="Prénom et nom de l'enfant" maxlength="80">' +
-      '<input class="input input--court" type="number" name="enfant_age" min="0" max="17" placeholder="Âge">' +
-      '<button type="button" class="enfant-suppr" aria-label="Retirer cet enfant">×</button>';
-    $("#enfants-liste").appendChild(ligne);
-    return ligne;
+  /* Nombre d'enfants saisi (0 si vide ou invalide, 10 au maximum) */
+  function nbEnfants(form) {
+    var n = parseInt(form.nb_enfants.value, 10);
+    return n > 0 ? Math.min(n, 10) : 0;
+  }
+
+  /* Autant de lignes « prénom et nom + âge » que d'enfants annoncés */
+  function lignesEnfants(n) {
+    var liste = $("#enfants-liste");
+    var lignes = $$(".enfant", liste);
+    for (var i = lignes.length; i < n; i++) {
+      var ligne = document.createElement("div");
+      ligne.className = "enfant";
+      ligne.innerHTML =
+        '<input class="input" type="text" name="enfant_nom" placeholder="Prénom et nom de l’enfant ' + (i + 1) + '" maxlength="80">' +
+        '<input class="input input--court" type="number" name="enfant_age" min="0" max="17" placeholder="Âge">';
+      liste.appendChild(ligne);
+    }
+    lignes.slice(n).forEach(function (l) { l.remove(); });
   }
 
   /* « Léa Dupont (6 ans) ; Noé Dupont (3 ans) », ou null */
   function enfants(form) {
-    if (!valeur(form, "avec_enfants")) return null;
+    if (valeur(form, "avec_enfants") !== "Oui") return null;
     var liste = $$(".enfant", form).map(function (l) {
       var nom = l.querySelector('[name="enfant_nom"]').value.trim();
       var age = l.querySelector('[name="enfant_age"]').value.trim();
-      if (!nom) return "";
       return age ? nom + " (" + age + " ans)" : nom;
-    }).filter(Boolean);
+    });
     return liste.length ? liste.join(" ; ") : null;
   }
 
   function valider(form) {
     var manquants = [];
     var aVerifier = TOUJOURS.slice();
-    if (valeur(form, "avec_enfants")) aVerifier.push("enfant_nom");
+    if (valeur(form, "avec_enfants") === "Oui") aVerifier.push("nb_enfants", "enfant_nom");
 
     aVerifier.forEach(function (nom) {
       var ok, message;
@@ -371,9 +367,14 @@
             : "Merci d'indiquer un numéro de téléphone.";
           break;
 
+        case "nb_enfants":
+          ok = nbEnfants(form) > 0;
+          message = "Merci d'indiquer le nombre d'enfants.";
+          break;
+
         case "enfant_nom":
-          ok = !!enfants(form);
-          message = "Merci d'indiquer le nom d'au moins un enfant.";
+          ok = $$('[name="enfant_nom"]', form).every(function (el) { return el.value.trim(); });
+          message = "Merci d'indiquer le nom de chaque enfant.";
           break;
 
         case "jours":

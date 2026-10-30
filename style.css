@@ -311,12 +311,6 @@ textarea.input{ resize:vertical; line-height:1.6; }
 .enfants{ display:flex; flex-direction:column; gap:.55rem; margin-top:.8rem; }
 .enfant{ display:flex; gap:.5rem; align-items:center; }
 .enfant .input--court{ max-width:5.5rem; flex:none; }
-.enfant-suppr{
-  flex:none; width:2.4rem; height:2.4rem; border:1px solid var(--line); border-radius:var(--r);
-  background:var(--fond); color:var(--gris); font-size:1.2rem; line-height:1; cursor:pointer;
-}
-.enfant-suppr:hover{ border-color:var(--line-accent); color:var(--principal); }
-.enfant-ajout{ margin-top:.7rem; }
 
 .field.is-invalid .input{ border-color:var(--err); background:#FDF3F2; }
 .field.is-invalid .choice{ border-color:#E8C4C1; }

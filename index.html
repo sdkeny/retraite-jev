@@ -199,15 +199,21 @@
       </fieldset>
 
       <fieldset class="field">
-        <legend class="q">Tes enfants <span class="opt">(facultatif)</span></legend>
-        <div class="choices">
-          <label class="choice"><input type="checkbox" name="avec_enfants" value="Oui"><span>Je viens avec mon ou mes enfants</span></label>
+        <legend class="q">Est-ce que tu viens avec des enfants&nbsp;? <span class="req">*</span></legend>
+        <div class="choices choices--row">
+          <label class="choice"><input type="radio" name="avec_enfants" value="Oui"><span>Oui</span></label>
+          <label class="choice"><input type="radio" name="avec_enfants" value="Non"><span>Non</span></label>
         </div>
-        <div id="bloc-enfants" hidden>
-          <div class="enfants" id="enfants-liste"></div>
-          <button type="button" class="btn btn--ghost enfant-ajout" id="enfant-ajout">+ Ajouter un enfant</button>
-          <p class="hint">Tes enfants sont inscrits avec toi : pas besoin de remplir un autre questionnaire pour eux.</p>
-        </div>
+        <p class="err" data-err-for="avec_enfants"></p>
+      </fieldset>
+
+      <fieldset class="field" id="bloc-enfants" hidden>
+        <label class="q" for="nb_enfants">Combien&nbsp;? <span class="req">*</span></label>
+        <input class="input input--court" type="number" id="nb_enfants" name="nb_enfants"
+               min="1" max="10" inputmode="numeric" placeholder="Ex. 2">
+        <p class="err" data-err-for="nb_enfants"></p>
+        <div class="enfants" id="enfants-liste"></div>
+        <p class="hint">Tes enfants sont inscrits avec toi : pas besoin de remplir un autre questionnaire pour eux.</p>
         <p class="err" data-err-for="enfant_nom"></p>
       </fieldset>
 
