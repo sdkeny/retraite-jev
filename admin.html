@@ -299,6 +299,7 @@
         })
       : rows;
 
+    var vendredi = rows.filter(function (r) { return /Ven/.test(r.jours || ""); });
     var samedi = rows.filter(function (r) { return /Sam/.test(r.jours || ""); });
     var dimanche = rows.filter(function (r) { return /Dim/.test(r.jours || ""); });
     var allergies = rows.filter(function (r) { return r.repas; });
@@ -313,6 +314,7 @@
     $("#stats").hidden = false;
     $("#stats").innerHTML =
       tuile(rows.length, "réponses reçues") +
+      tuile(vendredi.length, "présents vendredi soir", true) +
       tuile(samedi.length, "présents samedi", true) +
       tuile(dimanche.length, "présents dimanche", true) +
       tuile(freres.length + " / " + soeurs.length, "frères / sœurs") +
